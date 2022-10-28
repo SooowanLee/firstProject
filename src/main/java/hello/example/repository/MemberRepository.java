@@ -1,26 +1,15 @@
 package hello.example.repository;
 
-import hello.example.domain.Member;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import hello.example.domain.member.Member;
 
-import javax.persistence.EntityManager;
+import java.util.List;
 
-@Repository
-@RequiredArgsConstructor
-public class MemberRepository {
+public interface MemberRepository {
 
-    private final EntityManager em;
+    void save(Member member);
 
-    public void save(Member member) {
-        em.persist(member);
-    }
+    Member findOne(Long id);
+    List<Member> findByEmail(String email);
 
-    public Member findByEmail(String email) {
-        return em.find(Member.class, email);
-    }
-
-    public Member findOne(Long id) {
-        return em.find(Member.class, id);
-    }
+    List<Member> findAll();
 }
