@@ -10,8 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -21,17 +20,15 @@ class MemberServiceTest {
     MemberService memberService;
     @Autowired
     MemberRepository memberRepository;
-
     @Autowired
     PasswordEncoder passwordEncoder;
 
     public Member createMember() {
-        MemberFormDTO memberFormDTO = MemberFormDTO.builder()
-                .name("테스트")
-                .email("test@email.com")
-                .password("!@#123Qwe")
-                .address("테스트주소")
-                .build();
+        MemberFormDTO memberFormDTO = new MemberFormDTO();
+            memberFormDTO.setName("test");
+            memberFormDTO.setEmail("test@email.com");
+            memberFormDTO.setPassword("!@#$qweQWE");
+            memberFormDTO.setAddress("testAddress");
         return Member.createMember(memberFormDTO, passwordEncoder);
     }
 
@@ -54,18 +51,17 @@ class MemberServiceTest {
         memberService.join(member);
 
         // when
-        try {
-            memberService.join(member2);
-        } catch (IllegalStateException e) {
-            assertThat(e.getMessage()).isEqualTo("이미 가입된 회원입니다.");
-        }
-
-         //when
+        // 다 똑같은거다.
         assertThatThrownBy(() -> memberService.join(member2))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("이미 가입된 회원입니다.");
 
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(() -> memberService.join(member2))
+                .withMessage("이미 가입된 회원입니다.");
 
+        assertThatIllegalStateException()
+                .isThrownBy(() -> memberService.join(member2))
+                .withMessage("이미 가입된 회원입니다.");
     }
-
-
 }

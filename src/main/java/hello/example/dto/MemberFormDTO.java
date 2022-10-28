@@ -1,17 +1,13 @@
 package hello.example.dto;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-@Getter
-@EqualsAndHashCode
-@NoArgsConstructor
+@Getter @Setter
 public class MemberFormDTO {
 
     @NotBlank(message = "필수 정보입니다.")
@@ -28,12 +24,4 @@ public class MemberFormDTO {
 
     @NotBlank(message = "필수 정보입니다.")
     private String address;
-
-    @Builder
-    public MemberFormDTO(String name, String email, String password, String address) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.address = address;
-    }
 }
