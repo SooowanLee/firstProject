@@ -1,6 +1,6 @@
 package hello.example.repository;
 
-import hello.example.domain.member.Member;
+import hello.example.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
