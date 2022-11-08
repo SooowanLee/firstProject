@@ -14,5 +14,7 @@ public interface ItemRepository {
     List<Item> findByItemName(String itemName);
     List<Item> findByItemNameOrItemDetail(String itemName, String itemDetail);
     List<Item> findByPriceLessThan(Integer price);
+
+    List<Item> findByPriceLessThanOrderByPriceDesc(Integer price);
     List<Item> findAll();
 }
