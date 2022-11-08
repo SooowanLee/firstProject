@@ -10,12 +10,12 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class ItemRepositoryImpl implements ItemRepository {
-dfsdf
+
     private final EntityManager em;
 
     @Override
     public void save(Item item) {
-         em.persist(item);
+        em.persist(item);
     }
 
     @Override
@@ -32,6 +32,21 @@ dfsdf
     public List<Item> findByItemName(String itemName) {
         return em.createQuery("select i from Item i where i.itemName = :itemName", Item.class)
                 .setParameter("itemName", itemName)
+                .getResultList();
+    }
+
+    @Override
+    public List<Item> findByPriceLessThan(Integer price) {
+        return em.createQuery("select i from Item i where i.price < :price", Item.class)
+                .setParameter("price", price)
+                .getResultList();
+    }
+
+    @Override
+    public List<Item> findByItemNameOrItemDetail(String itemName, String itemDetail) {
+        return em.createQuery("select i from Item i where i.itemName =:itemName or i.itemDetail =:itemDetail", Item.class)
+                .setParameter("itemName", itemName)
+                .setParameter("itemDetail", itemDetail)
                 .getResultList();
     }
 
