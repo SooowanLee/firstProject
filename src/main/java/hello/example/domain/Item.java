@@ -1,7 +1,9 @@
 package hello.example.domain;
 
 import hello.example.constant.ItemSellStatus;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -11,9 +13,11 @@ import java.time.LocalDateTime;
 @Getter
 @ToString
 @Table(name = "item")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Item {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "item_id")
     private Long id;                        //상품 코드
 
@@ -36,5 +40,24 @@ public class Item {
     private LocalDateTime regTime;          //등록 시간
 
     private LocalDateTime updateTime;       //수정 시간
+
+    private Item(String itemName, int price, String itemDetail, ItemSellStatus itemSellStatus, int stockNumber, LocalDateTime regTime, LocalDateTime updateTime) {
+        this.itemName = itemName;
+        this.price = price;
+        this.itemDetail = itemDetail;
+        this.itemSellStatus = itemSellStatus;
+        this.stockNumber = stockNumber;
+        this.regTime = regTime;
+        this.updateTime = updateTime;
+    }
+
+    public static Item createItem(String itemName, int price,
+                                  String itemDetail,
+                                  ItemSellStatus itemSellStatus,
+                                  int stockNumber,
+                                  LocalDateTime regTime,
+                                  LocalDateTime updateTime) {
+        return new Item(itemName, price, itemDetail, itemSellStatus, stockNumber, regTime, updateTime);
+    }
 }
 
