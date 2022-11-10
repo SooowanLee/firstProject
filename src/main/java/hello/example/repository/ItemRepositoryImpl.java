@@ -44,7 +44,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public List<Item> findByItemDetail(String itemDetail) {
-        return em.createQuery("select I from Item i where i.itemDetail like %:itemDetail% order by i.price desc", Item.class)
+        return em.createQuery("select i from Item i where i.itemDetail like '%' || :itemDetail || '%' order by i.price desc", Item.class)
                 .setParameter("itemDetail", itemDetail)
                 .getResultList();
     }
