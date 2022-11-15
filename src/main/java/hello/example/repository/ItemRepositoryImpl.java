@@ -50,6 +50,13 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
+    public List<Item> findByItemDetailNative(String itemDetail) {
+        return em.createNativeQuery("select * from item i where i.item_detail like '%' || :itemDetail || '%' order by i.price desc", Item.class)
+                .setParameter("itemDetail", itemDetail)
+                .getResultList();
+    }
+
+    @Override
     public List<Item> findByPriceLessThanOrderByPriceDesc(Integer price) {
         return em.createQuery("select i from Item i where i.price < :price order by i.price desc", Item.class)
                 .setParameter("price", price)
