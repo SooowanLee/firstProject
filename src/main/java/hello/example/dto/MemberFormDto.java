@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Getter @Setter
-public class MemberFormDTO {
+public class MemberFormDto {
 
     @NotBlank(message = "필수 정보입니다.")
     private String name;
