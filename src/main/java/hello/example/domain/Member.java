@@ -1,9 +1,9 @@
-package hello.example.domain.member;
+package hello.example.domain;
 
 import hello.example.constant.Role;
-import hello.example.domain.BaseEntity;
-import hello.example.dto.MemberFormDTO;
+import hello.example.dto.MemberFormDto;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,9 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "member")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends BaseEntity {
+public class Member extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,15 +32,24 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Builder
+    public Member(String name, String email, String password, String address, Role role) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+        this.role = role;
+    }
+
     private Member(String name, String email, String password, String address) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.address = address;
-        this.role = Role.USER;
+        this.role = Role.ADMIN;
     }
 
-    public static Member createMember(MemberFormDTO memberFormDTO, PasswordEncoder passwordEncoder) {
+    public static Member createMember(MemberFormDto memberFormDTO, PasswordEncoder passwordEncoder) {
         return new Member(memberFormDTO.getName(),
                 memberFormDTO.getEmail(),
                 passwordEncoder.encode(memberFormDTO.getPassword()),

@@ -1,63 +1,62 @@
 package hello.example.domain;
 
 import hello.example.constant.ItemSellStatus;
-import lombok.AccessLevel;
+import hello.example.dto.ItemFormDto;
+import hello.example.exception.OutOfStockException;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @ToString
 @Table(name = "item")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Item {
+public class Item extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "item_id")
     private Long id;                        //상품 코드
 
-    @Column(nullable = false, length = 55)
+    @Column(length = 55)
     private String itemName;                //상품 명
 
-    @Column(nullable = false, name = "price")
+    @Column(name = "price", nullable = false)
     private int price;                      //상품 가격
 
-    @Column(nullable = false)
+    @Column
     private int stockNumber;                //재고 수량
 
     @Lob
-    @Column(nullable = false)
+    @Column
     private String itemDetail;              //상품 상세 설명
 
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus;  //상품 판매 상태
 
-    private LocalDateTime regTime;          //등록 시간
-
-    private LocalDateTime updateTime;       //수정 시간
-
-    private Item(String itemName, int price, String itemDetail, ItemSellStatus itemSellStatus, int stockNumber, LocalDateTime regTime, LocalDateTime updateTime) {
-        this.itemName = itemName;
-        this.price = price;
-        this.itemDetail = itemDetail;
-        this.itemSellStatus = itemSellStatus;
-        this.stockNumber = stockNumber;
-        this.regTime = regTime;
-        this.updateTime = updateTime;
+    public void updateItem(ItemFormDto itemFormDto) {
+        this.itemName = itemFormDto.getItemName();
+        this.price = itemFormDto.getPrice();
+        this.stockNumber = itemFormDto.getStockNumber();
+        this.itemDetail = itemFormDto.getItemDetail();
+        this.itemSellStatus = itemFormDto.getItemSellStatus();
     }
 
-    public static Item createItem(String itemName, int price,
-                                  String itemDetail,
-                                  ItemSellStatus itemSellStatus,
-                                  int stockNumber,
-                                  LocalDateTime regTime,
-                                  LocalDateTime updateTime) {
-        return new Item(itemName, price, itemDetail, itemSellStatus, stockNumber, regTime, updateTime);
+    public void removeStock(int stockNumber) {
+
+        int restStock = this.stockNumber - stockNumber;
+        if (restStock < 0) {
+            throw new OutOfStockException("상품의 재고가 부족합니다.(현재 재고 수량: " + this.stockNumber + ")");
+        }
+        this.stockNumber = restStock;
     }
+
+    public void addStock(int stockNumber) {
+        this.stockNumber += stockNumber;
+    }
+
 }
 

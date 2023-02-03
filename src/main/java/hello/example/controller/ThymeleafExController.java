@@ -75,4 +75,9 @@ public class ThymeleafExController {
         model.addAttribute("param2", param2);
         return "thymeleafEx/thymeleafEx05";
     }
+
+    @GetMapping("/ex06")
+    public String thymeleafExample06() {
+        return "thymeleafEx/thymeleafEx06";
+    }
 }
